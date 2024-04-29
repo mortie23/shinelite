@@ -8,4 +8,11 @@ Description: Use as a template for a CRUD app
 License: Totally free to use
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports:
+  shiny,
+  bslib,
+  DT,
+  DBI,
+  RSQLite
