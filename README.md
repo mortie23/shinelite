@@ -83,4 +83,4 @@ runApp('R')
 
 Remember to add the two most important things to your new todo list:
 
-![](./docs/img/shinelite.png)
+![](./man/img/shinelite.png)
