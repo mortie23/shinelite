@@ -29,23 +29,6 @@ Now install everything else with a renv restore
 renv::restore()
 ```
 
-Let's just check the space on the VM
-
-```sh
-# Run this from your terminal (not console)
-df -h
-```
-
-```log
-Filesystem      Size  Used Avail Use% Mounted on
-tmpfs           1.1G  2.0M  1.1G   1% /run
-/dev/sda3        78G   14G   61G  19% /
-tmpfs           5.2G     0  5.2G   0% /dev/shm
-tmpfs           5.0M  4.0K  5.0M   1% /run/lock
-/dev/sda2       512M  6.1M  506M   2% /boot/efi
-tmpfs           1.1G  100K  1.1G   1% /run/user/1007
-```
-
 We also need the dev tools package to make all functions available.
 
 ```R
@@ -84,3 +67,11 @@ runApp('R')
 Remember to add the two most important things to your new todo list:
 
 ![](man/img/shinelite.png)
+
+## Adding documentation (optional)
+
+If you want to render out a site for your package you can use package down.
+
+```R
+pkgdown::build_site()
+```
