@@ -11,12 +11,12 @@ set_environment <- function() {
 
   # Define configurations for each environment
   dev_config <- list(
-    db_path = "/u01/data/shinelite/dev",
+    db_path = "/u01/data/shinelite/dev/todo_app.db",
     other_config_variable = "value"
   )
 
   prd_config <- list(
-    db_path = "/u01/data/shinelite/prd",
+    db_path = "/u01/data/shinelite/prd/todo_app.db",
     other_config_variable = "value"
   )
 

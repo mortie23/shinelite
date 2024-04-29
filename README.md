@@ -1,8 +1,14 @@
 # Shine Lite
 
-## Notes
+A basic lite CRUD application framework for RShiny application development with a SQlite back end.
+
+## Setup
+
+I started developing this on a vanilla Ubuntu VM abd tried to capture all the things needed to get it up and running.
 
 ```sh
+# Run this from your terminal (not console)
+# Install all these OS binaries or you will get caught during the renv restore
 sudo apt install build-essential
 sudo apt install libcurl4-openssl-dev
 sudo apt install libfontconfig1-dev
@@ -11,27 +17,26 @@ sudo apt install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 sudo apt install libxml2-dev
 ```
 
+Start with the initial install of renv.
+
 ```R
 install.packages('renv')
 ```
 
-Before
+Now install everything else with a renv restore
 
-```sh
-df -h
-Filesystem      Size  Used Avail Use% Mounted on
-tmpfs           1.1G  2.0M  1.1G   1% /run
-/dev/sda3        78G   14G   61G  18% /
-tmpfs           5.2G     0  5.2G   0% /dev/shm
-tmpfs           5.0M  4.0K  5.0M   1% /run/lock
-/dev/sda2       512M  6.1M  506M   2% /boot/efi
-tmpfs           1.1G  112K  1.1G   1% /run/user/1007
+```R
+renv::restore()
 ```
 
-After
+Let's just check the space on the VM
 
 ```sh
+# Run this from your terminal (not console)
 df -h
+```
+
+```log
 Filesystem      Size  Used Avail Use% Mounted on
 tmpfs           1.1G  2.0M  1.1G   1% /run
 /dev/sda3        78G   14G   61G  19% /
@@ -41,52 +46,41 @@ tmpfs           5.0M  4.0K  5.0M   1% /run/lock
 tmpfs           1.1G  100K  1.1G   1% /run/user/1007
 ```
 
+We also need the dev tools package to make all functions available.
+
 ```R
-renv::restore()
+devtools::load_all(".")
 ```
 
+Initialise the sqlite db in development environment.
 
-```log
-
-renv: Project Environments for R
-
-Welcome to renv! It looks like this is your first time using renv.
-This is a one-time message, briefly describing some of renv's functionality.
-
-renv will write to files within the active project folder, including:
-
-  - A folder 'renv' in the project directory, and
-  - A lockfile called 'renv.lock' in the project directory.
-
-In particular, projects using renv will normally use a private, per-project
-R library, in which new packages will be installed. This project library is
-isolated from other R libraries on your system.
-
-In addition, renv will update files within your project directory, including:
-
-  - .gitignore
-  - .Rbuildignore
-  - .Rprofile
-
-Finally, renv maintains a local cache of data on the filesystem, located at:
-
-  - "~/.cache/R/renv"
-
-This path can be customized: please see the documentation in `?renv::paths`.
-
-Please read the introduction vignette with `vignette("renv")` for more information.
-You can browse the package documentation online at https://rstudio.github.io/renv/.
-Do you want to proceed? [y/N]: y
-
-- "~/.cache/R/renv" has been created.
-It looks like you've called renv::restore() in a project that hasn't been activated yet.
-How would you like to proceed? 
-
-1: Activate the project and use the project library.
-2: Do not activate the project and use the current library paths.
-3: Cancel and resolve the situation another way.
+```sh
+# Run this from your terminal (not console)
+export env=dev
+db_path="/u01/data/shinelite/dev/todo_app.db"
+sqlite3 $db_path <<EOF
+CREATE TABLE IF NOT EXISTS todos (
+    id INTEGER PRIMARY KEY,
+    todo TEXT,
+    done BOOLEAN DEFAULT FALSE
+);
+EOF
 ```
 
+## The Renvironment
 
-need dev tools to make all functions available
+Create a `.Renviron` file in the root of the cloned repository and populate it with this:
 
+```ini
+env=dev
+```
+
+## Run the RShiny application in dev mode
+
+```R
+runApp('R')
+```
+
+Remember to add the two most important things to your new todo list:
+
+![](./docs/img/shinelite.png)
