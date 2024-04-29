@@ -68,6 +68,12 @@ Remember to add the two most important things to your new todo list:
 
 ![](man/img/shinelite.png)
 
+## Checking the DB
+
+Just to show how to confirm that the DB was written to using the CLI.
+
+![](man/img/shinelite-sqlite.png)
+
 ## Adding documentation (optional)
 
 If you want to render out a site for your package you can use package down.
