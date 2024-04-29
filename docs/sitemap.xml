@@ -10,7 +10,16 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/dependencies.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_db_connection.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/runShineLite.html</loc>
   </url>
   <url>
     <loc>/reference/set_environment.html</loc>
