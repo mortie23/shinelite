@@ -1,18 +1,3 @@
-
-#' Get SQLite database connection
-#'
-#' @return connection
-#' @export
-#'
-#' @examples get_db_connection()
-get_db_connection <- function() {
-  config <- set_environment()
-  db_path <- config$db_path
-  conn <- dbConnect(SQLite(), dbname = db_path)
-  return(conn)
-}
-
-
 #' Run the Shiny application
 #'
 #' @export
@@ -46,6 +31,7 @@ runShineLite <- function() {
 
   # Define server logic
   server <- function(input, output, session) {
+
     # Set theme based on checkbox input
     observe({
       session$setCurrentTheme(
@@ -58,7 +44,27 @@ runShineLite <- function() {
 
     observe({
       conn(get_db_connection())
+      # Call refreshTable function to render the table on initial load
+      refreshTable()
     })
+
+    # Function to refresh the DataTable
+    refreshTable <- function() {
+      db <- conn()
+      todos <- dbGetQuery(db, "SELECT id, todo FROM todos order by id desc")
+      todos$delete <- sprintf('<input type="button" id="delete_%s" value="Done">', todos$id)
+      output$todos_table <- renderDT({
+        datatable(
+          todos,
+          options = list(dom = 't', columnDefs = list(list(targets = "_all"))),
+          escape = FALSE,
+          callback = JS('table.on("click.dt", "input", function() {
+            var id = $(this).attr("id");
+            Shiny.setInputValue(id, 1, {priority: "event"});
+          });')
+        )
+      })
+    }
 
     # When add todo button is clicked, insert todo into database
     observeEvent(input$add_todo, {
@@ -66,20 +72,21 @@ runShineLite <- function() {
       if (nchar(todo_text) > 0) {
         db <- conn()
         dbExecute(db, "INSERT INTO todos (todo) VALUES (?)", todo_text)
-        # Update the list of todos after adding a new one
-        todos <- dbGetQuery(db, "SELECT id, todo FROM todos")
-        output$todos_table <- renderDataTable({
-          datatable(todos, options = list(dom = 't'))
-        })
+        # Refresh the DataTable
+        refreshTable()
       }
     })
 
-    # Update checkbox input with todos from database
+    # Delete todo when Done button is clicked
     observe({
-      db <- conn()
-      todos <- dbGetQuery(db, "SELECT id, todo FROM todos")
-      output$todos_table <- renderDataTable({
-        datatable(todos, options = list(dom = 't'))
+      lapply(grep("^delete_", names(input), value = TRUE), function(delete_id) {
+        observeEvent(input[[delete_id]], {
+          todo_id <- as.numeric(strsplit(delete_id, "_")[[1]][2])
+          db <- conn()
+          dbExecute(db, paste0("DELETE FROM todos WHERE id = ", todo_id))
+          # Refresh the DataTable
+          refreshTable()
+        })
       })
     })
 
