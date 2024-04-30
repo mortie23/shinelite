@@ -74,7 +74,7 @@ runShineLite()
 
 Remember to add the two most important things to your new todo list:
 
-![](man/img/shinelite.png)
+![](man/img/shinelite-app.png)
 
 ## Checking the DB
 
